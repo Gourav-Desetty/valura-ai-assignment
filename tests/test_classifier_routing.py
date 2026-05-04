@@ -10,6 +10,8 @@ fixtures/README.md — follow them or document any deviations in your README.
 from typing import Any
 
 import pytest
+from dotenv import load_dotenv
+load_dotenv()
 
 
 # ---------------------------------------------------------------------------
@@ -81,7 +83,9 @@ def matches_entities(actual: dict[str, Any], expected: dict[str, Any]) -> bool:
 # Routing accuracy — this is the test we score
 # ---------------------------------------------------------------------------
 
-@pytest.mark.skip(reason="Stub — wire up your classifier import below and remove this decorator")
+from src.classifier.classifier import classify
+
+# @pytest.mark.skip(reason="Stub — wire up your classifier import below and remove this decorator")
 def test_classifier_routing_accuracy(gold_classifier_queries, mock_llm):
     """
     Threshold: ≥ 85% routing accuracy.
@@ -90,7 +94,7 @@ def test_classifier_routing_accuracy(gold_classifier_queries, mock_llm):
 
     correct = 0
     for case in gold_classifier_queries:
-        result = classify(case["query"], llm=mock_llm)  # noqa: F821
+        result = classify(case["query"])  # noqa: F821
         if result.agent == case["expected_agent"]:
             correct += 1
 
@@ -98,7 +102,7 @@ def test_classifier_routing_accuracy(gold_classifier_queries, mock_llm):
     assert accuracy >= 0.85, f"Routing accuracy {accuracy:.2%} below 85%"
 
 
-@pytest.mark.skip(reason="Stub — wire up your classifier import below and remove this decorator")
+# @pytest.mark.skip(reason="Stub — wire up your classifier import below and remove this decorator")
 def test_classifier_entity_extraction(gold_classifier_queries, mock_llm):
     """
     Soft signal — not a hard threshold. Reported, not failed on.
@@ -109,7 +113,7 @@ def test_classifier_entity_extraction(gold_classifier_queries, mock_llm):
         if not case["expected_entities"]:
             continue
         total_with_entities += 1
-        result = classify(case["query"], llm=mock_llm)  # noqa: F821
+        result = classify(case["query"])  # noqa: F821
         if matches_entities(result.entities, case["expected_entities"]):
             matched += 1
 
