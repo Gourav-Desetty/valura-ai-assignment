@@ -22,8 +22,12 @@ def build_messages_node(state: ClassifierState) -> ClassifierState:
 
 def call_llm_node(state: ClassifierState, llm=None) -> ClassifierState:
     try:
-        if llm is not None:
-            llm(state["messages"])
+        api_key = os.getenv("OPENAI_API_KEY")
+        
+        if llm is not None or not api_key:
+            # mock path: no API key in CI, or explicit mock injected
+            if llm is not None:
+                llm(state["messages"])
             last = state["query"].lower()
             agent = "general_query"
             if any(w in last for w in ["portfolio", "health check", "diversif", "concentration", "holdings", "am i beating", "portfolio summary", "review my"]):
@@ -46,7 +50,7 @@ def call_llm_node(state: ClassifierState, llm=None) -> ClassifierState:
                 agent = "market_research"
             state["raw_result"] = {"agent": agent, "intent": "mocked", "entities": {}, "safety_verdict": "safe"}
         else:
-            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+            client = OpenAI(api_key=api_key)
             response = client.chat.completions.create(
                 model="gpt-4o-mini",
                 messages=state['messages'],
