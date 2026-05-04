@@ -4,6 +4,7 @@ import os
 from openai import OpenAI
 # from google import genai as google_genai
 from groq import Groq
+import google.generativeai as genai 
 from dotenv import load_dotenv
 load_dotenv() 
 
@@ -30,21 +31,11 @@ def call_llm_node(state: ClassifierState, llm=None) -> ClassifierState:
             state["raw_result"] = llm(state["messages"])
         else:
             # real path - OpenAI
-            # client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-            # response = client.chat.completions.create(
-            #     model="gpt-4o-mini",
-            #     messages=state['messages'],
-            #     response_format={"type": "json_object"},  # forces valid JSON
-            #     temperature=0,
-            # )
-            # state["raw_result"] = json.loads(
-            #     response.choices[0].message.content
-            # )
-            client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
             response = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=state["messages"],
-                response_format={"type": "json_object"},
+                model="gpt-4o-mini",
+                messages=state['messages'],
+                response_format={"type": "json_object"},  # forces valid JSON
                 temperature=0,
             )
             state["raw_result"] = json.loads(
