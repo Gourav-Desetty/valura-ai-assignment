@@ -31,3 +31,6 @@ pytest-mock>=3.14.0
 #   - tenacity              — if you implement retry policies
 #   - cachetools            — if you implement the optional dedupe cache
 # =============================================================================
+
+langgraph
+google-generativeai==0.7.2
