@@ -1,10 +1,6 @@
 import json
 import os
-
 from openai import OpenAI
-# from google import genai as google_genai
-from groq import Groq
-import google.generativeai as genai 
 from dotenv import load_dotenv
 load_dotenv() 
 
