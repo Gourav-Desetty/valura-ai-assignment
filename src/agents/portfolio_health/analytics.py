@@ -4,10 +4,8 @@ No I/O, no LLM calls — just math on dicts.
 Each function is independently testable.
 """
 from __future__ import annotations
-
 import math
 from datetime import date, datetime
-
 from .models import (
     BenchmarkComparison,
     ConcentrationRisk,

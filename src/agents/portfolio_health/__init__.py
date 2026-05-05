@@ -1,23 +1,6 @@
-"""
-Portfolio Health Agent — main entrypoint.
-
-Flow:
-  1. Parse + validate user input (Pydantic)
-  2. Fetch current prices and FX rates (yfinance)
-  3. Run pure analytics (no LLM)
-  4. Ask LLM for a plain-language narrative summary (one focused call)
-  5. Assemble and return PortfolioHealthReport
-
-The `llm` parameter accepts any callable with signature:
-    llm(prompt: str) -> str
-This makes it trivial to inject a mock in tests.
-"""
 from __future__ import annotations
-
-import logging
 from datetime import date
 from typing import Callable
-
 from .analytics import (
     compute_benchmark_comparison,
     compute_concentration,
@@ -33,7 +16,6 @@ from .models import (
 )
 from .narrative import build_narrative_prompt, parse_narrative
 
-# logger = logging.getLogger(__name__)
 
 DISCLAIMER = (
     "This is not investment advice. This report is for informational purposes only. "

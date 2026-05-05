@@ -1,9 +1,5 @@
 """
 LLM narrative helpers for the Portfolio Health agent.
-
-Kept separate so the prompt is easy to iterate on without touching agent logic.
-The LLM's only job here is to write ONE plain-English summary sentence or two —
-all the numbers come from our analytics layer.
 """
 
 def build_narrative_prompt(
