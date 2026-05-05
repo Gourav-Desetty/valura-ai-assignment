@@ -321,5 +321,5 @@ REDIS_URL=                              # For optional caching (not implemented)
 
 ## Defence Video Link
 
-[Defence Video](https://www.youtube.com/watch?v=PLACEHOLDER) (Unlisted YouTube link - max 10 minutes)
+[Defence Video](https://youtu.be/rX6BSy2zB7E) (Unlisted YouTube link - max 10 minutes)
 
