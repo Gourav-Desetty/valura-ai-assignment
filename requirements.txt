@@ -23,15 +23,16 @@ pytest>=8.2.0
 pytest-asyncio>=0.23.0
 pytest-mock>=3.14.0
 
+# --- Market / Data (USED → REQUIRED) ---
+yfinance>=0.2.40
+pandas>=2.2.2
+
+# --- Orchestration (USED → REQUIRED) ---
+langgraph>=0.2.0
+
 # =============================================================================
 # Suggested additions (add only what you actually use):
-#   - yfinance              — easy market data (stretch alternative: an MCP server)
-#   - pandas / numpy        — if your portfolio math gets non-trivial
 #   - asyncpg / aiosqlite   — only if you persist sessions in a real DB
 #   - tenacity              — if you implement retry policies
 #   - cachetools            — if you implement the optional dedupe cache
 # =============================================================================
-
-langgraph
-google-generativeai==0.7.2
-groq
