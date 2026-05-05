@@ -7,60 +7,52 @@ class Verdict:
     category: str | None
     message: str
 
-BLOCKED_KEYWORDS = {
-    "insider_trading":[
-        "unannounced acquisition",
-        "tip about earnings",
-        "confidential merger",
-        "before tomorrow's announcement",
-        "before the call",
-        "confidential news",
-        "insider tip",
-        "load up before",
-        "i work at",
-        "my friend at",
+BLOCK_PATTERNS: dict[str, list[str]] = {
+    "insider_trading": [
+        r"i (work|worked) at .+ and know",
+        r"my friend at \w+ gave me a tip",
+        r"(confidential|non.public) (merger|acquisition|earnings|news)",
+        r"(buy|sell|trade|load up).{0,30}before.{0,20}(announcement|call|report)",
+        r"earnings before.{0,20}(announcement|call)",
+        r"tip (about|on) earnings",
     ],
     "market_manipulation": [
-        "pump up",
-        "coordinated buying scheme",
-        "wash trade",
-        "move this stock",
-        "create volume",
+        r"pump (up|the price)",
+        r"wash trad(e|ing)",
+        r"coordinated (buying|trading) scheme",
+        r"move (this|the) stock",
+        r"create (fake |false )?(volume|activity)",
     ],
-    "money_laundering":[
-        "without reporting it",
-        "structure deposits to avoid",
-        "avoid the 10k reporting threshold",
-        "layer my trades to obscure",
-        "obscure the source",
-        "from the tax authorities",
-        "hide trading profits"
+    "money_laundering": [
+        r"without reporting it",
+        r"structure deposits.{0,20}avoid",
+        r"avoid the 10k? reporting",
+        r"(layer|obscure).{0,20}(source of|funds|trades)",
+        r"hide (trading )?profits from",
     ],
-    "guaranteed_returns":[
-        "guarantee me",
-        "promise me my money",
-        "my money will double",
-        "100% certain to go up",
-        "foolproof way to make",
+    "guaranteed_returns": [
+        r"guarantee me.{0,20}(return|profit)",
+        r"promise me.{0,20}(double|return|profit)",
+        r"100% (certain|sure|guaranteed).{0,20}(go up|return)",
+        r"foolproof way to make",
     ],
-    "reckless_advice":[
-        "all my retirement savings in crypto",
-        "take a margin loan to buy",
-        "my entire emergency fund into options",
-        "which stock to mortgage my house",
+    "reckless_advice": [
+        r"(all|entire|everything).{0,30}(retirement|savings|emergency fund).{0,20}(crypto|options)",
+        r"(entire|all).{0,20}emergency fund.{0,20}(options|crypto)",
+        r"margin loan.{0,20}(buy|invest)",
+        r"mortgage my house.{0,20}(stock|invest|buy)",
+        r"put (all|everything).{0,20}(into|in) (crypto|options)",
     ],
     "sanctions_evasion": [
-        "bypass ofac sanctions",
-        "shell company to bypass",
-        "without it being traced",
-        "sanctioned russian company",
-        "invest in a sanctioned",
+        r"bypass (ofac|sanctions)",
+        r"shell company.{0,20}bypass",
+        r"invest in.{0,20}sanctioned",
+        r"without (it being )?traced",
     ],
     "fraud": [
-        "fake contract note",
-        "draft a fake",
-        "fabricate",
-        "falsified document",
+        r"fake (contract|document|note)",
+        r"(draft|create).{0,20}fake",
+        r"fabricate.{0,20}(document|record|loss)",
     ],
 }
 
@@ -77,12 +69,13 @@ BLOCK_MESSAGES = {
 def check(query: str) -> Verdict:
     query_lower = query.lower()
 
-    for category, keywords in BLOCKED_KEYWORDS.items():
-        for keyword in keywords:
-            if keyword in query_lower:
+    for category, patterns in BLOCK_PATTERNS.items():
+        for pattern in patterns:
+            if re.search(pattern, query_lower):
                 return Verdict(
                     blocked=True,
                     category=category,
-                    message=BLOCK_MESSAGES[category]
+                    message=BLOCK_MESSAGES[category],
                 )
+
     return Verdict(blocked=False, category=None, message="")
