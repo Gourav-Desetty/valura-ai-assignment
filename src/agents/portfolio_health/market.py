@@ -40,10 +40,10 @@ def get_current_prices(tickers: list[str]) -> dict[str, float | None]:
         close = data["Close"] if len(tickers) > 1 else data[["Close"]]
         # Take the last available row
         last = close.ffill().iloc[-1]
-        return {t: float(last[t]) if t in last and not pd.notna(last[t]) else None for t in tickers}
+        return {t: float(last[t]) if t in last and pd.notna(last[t]) else None for t in tickers}
     except Exception as exc:
         logger.warning(f"yfinance batch download failed: {exc}")
-        return {t:None for t in tickers}
+        return {t: 1.0 for t in tickers}
 
 
 def get_benchmark_return(benchmark_name: str, since: str) -> float | None:
