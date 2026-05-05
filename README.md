@@ -139,6 +139,58 @@ Request body:
 
 Response: SSE stream with events as documented in `src/api/routes.py`.
 
+## Example API Call & Streaming Response
+
+```bash
+curl -X POST http://127.0.0.1:8000/query \
+  -H "Content-Type: application/json" \
+  -d @test.json
+```
+
+Response (Server-Sent Events):
+
+```
+event: metadata
+data: {"status": "classifying"}
+
+event: classification
+data: {
+  "intent": "check portfolio performance",
+  "agent": "portfolio_health",
+  "entities": {},
+  "safety_verdict": "safe"
+}
+
+event: agent_result
+data: {
+  "concentration_risk": {
+    "top_position_pct": 0.0,
+    "top_3_positions_pct": 0.0,
+    "flag": "low"
+  },
+  "performance": {
+    "total_return_pct": null,
+    "annualized_return_pct": null,
+    "note": "No positions yet"
+  },
+  "benchmark_comparison": {
+    "benchmark": "S&P 500",
+    "portfolio_return_pct": null,
+    "benchmark_return_pct": null,
+    "alpha_pct": null
+  },
+  "observations": [
+    {
+      "severity": "info",
+      "text": "Welcome, Test User! Your account is verified and ready..."
+    }
+  ]
+}
+
+event: done
+data: {"status": "complete"}
+```
+
 ## Running Tests
 
 ```bash
