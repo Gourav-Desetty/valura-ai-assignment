@@ -94,7 +94,7 @@ def test_classifier_routing_accuracy(gold_classifier_queries, mock_llm):
 
     correct = 0
     for case in gold_classifier_queries:
-        result = classify(case["query"])  # noqa: F821
+        result = classify(case["query"], llm=mock_llm)  # noqa: F821
         if result.agent == case["expected_agent"]:
             correct += 1
 
@@ -113,7 +113,7 @@ def test_classifier_entity_extraction(gold_classifier_queries, mock_llm):
         if not case["expected_entities"]:
             continue
         total_with_entities += 1
-        result = classify(case["query"])  # noqa: F821
+        result = classify(case["query"], llm=mock_llm)  # noqa: F821
         if matches_entities(result.entities, case["expected_entities"]):
             matched += 1
 
